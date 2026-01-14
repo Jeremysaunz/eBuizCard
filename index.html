@@ -12,6 +12,7 @@
   <script>
     // Tailwind runtime config (CDN)
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           colors: {
@@ -22,14 +23,18 @@
               800: "#0D1636",
             },
             brand: {
-              blue: "#3B82F6",
-              cyan: "#22D3EE",
-              purple: "#A855F7",
+              // FLOW LAB 로고 색상 팔레트
+              primary: "#8E8EF9",     // 보라빛 블루 (로고 중간 톤) - Primary
+              secondary: "#62CDFF",  // 시안/밝은 블루 (로고 밝은 톤) - Secondary
+              accent: "#A55EFF",     // 보라/마젠타 (로고 진한 톤) - Accent
+              dark: "#2D3250",       // 어두운 블루/슬레이트 (텍스트용)
+              gray: "#7B8191",       // 중간 회색 (보조 텍스트용)
             },
           },
           boxShadow: {
             soft: "0 24px 90px -60px rgba(0,0,0,.85)",
             card: "0 18px 60px -40px rgba(0,0,0,.65)",
+            'card-light': "0 18px 60px -40px rgba(0,0,0,.15)",
           },
         },
       },
@@ -42,21 +47,48 @@
     }
     body {
       font-family: "Inter", sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .program-content {
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    }
+    .program-icon {
+      flex-shrink: 0;
     }
   </style>
 </head>
 
-<body class="bg-gradient-to-b from-ink-950 via-ink-900 to-ink-950 text-slate-100">
-  <!-- Ambient glow -->
-  <div class="pointer-events-none fixed inset-0">
+<body class="dark bg-gradient-to-b from-ink-950 via-ink-900 to-ink-950 text-slate-100">
+  <!-- Theme Toggle Button -->
+  <button
+    id="theme-toggle"
+    class="fixed top-6 right-6 z-50 rounded-full bg-white dark:bg-white/10 backdrop-blur-xl p-3 ring-2 ring-gray-200 dark:ring-white/20 hover:bg-gray-50 dark:hover:bg-white/15 transition-all shadow-lg hover:shadow-xl border border-gray-200 dark:border-white/10"
+    aria-label="Toggle theme"
+  >
+    <i class="fa-solid fa-moon text-lg text-gray-700 dark:text-white/90 dark:block hidden" aria-hidden="true"></i>
+    <i class="fa-solid fa-sun text-lg text-gray-700 dark:text-white/90 dark:hidden block" aria-hidden="true"></i>
+  </button>
+
+  <!-- Ambient glow - FLOW LAB 로고 스타일 -->
+  <div class="pointer-events-none fixed inset-0 dark:block hidden">
     <div
-      class="absolute -top-48 left-1/2 h-[560px] w-[560px] -translate-x-1/2 rounded-full bg-gradient-to-br from-brand-blue/30 via-brand-purple/20 to-brand-cyan/10 blur-3xl"
+      class="absolute -top-48 left-1/2 h-[560px] w-[560px] -translate-x-1/2 rounded-full bg-gradient-to-br from-brand-secondary/20 via-brand-primary/15 to-brand-accent/20 blur-3xl"
     ></div>
     <div
-      class="absolute -bottom-56 left-8 h-[560px] w-[560px] rounded-full bg-gradient-to-br from-brand-purple/20 via-brand-blue/15 to-transparent blur-3xl"
+      class="absolute top-20 right-20 h-[400px] w-[400px] rounded-full bg-brand-secondary/12 blur-3xl"
     ></div>
     <div
-      class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,.08),transparent_40%),radial-gradient(circle_at_80%_30%,rgba(168,85,247,.08),transparent_45%),radial-gradient(circle_at_40%_90%,rgba(34,211,238,.05),transparent_50%)]"
+      class="absolute -bottom-56 left-8 h-[560px] w-[560px] rounded-full bg-gradient-to-br from-brand-primary/15 to-brand-accent/12 blur-3xl"
+    ></div>
+  </div>
+
+  <!-- Light mode glow -->
+  <div class="pointer-events-none fixed inset-0 dark:hidden block">
+    <div
+      class="absolute -top-48 left-1/2 h-[560px] w-[560px] -translate-x-1/2 rounded-full bg-gradient-to-br from-brand-secondary/10 via-brand-primary/8 to-brand-accent/10 blur-3xl"
+    ></div>
+    <div
+      class="absolute top-20 right-20 h-[400px] w-[400px] rounded-full bg-brand-secondary/6 blur-3xl"
     ></div>
   </div>
 
@@ -64,17 +96,21 @@
     <!-- Top bar -->
     <header class="mb-6 flex flex-col gap-3 md:mb-8 md:flex-row md:items-end md:justify-between">
       <div>
-        <p class="text-xs font-semibold tracking-[0.28em] text-white/50">FLOW LAB · 성장 설계 스튜디오</p>
-        <h1 class="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">
+        <p class="text-sm font-semibold tracking-[0.28em] text-brand-gray dark:text-white/70 flex items-center gap-2">
+          <i class="fa-solid fa-rocket text-brand-primary dark:text-brand-secondary" aria-hidden="true"></i>
+          FLOW LAB · 성장 설계 스튜디오
+        </p>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-brand-dark dark:text-white md:text-4xl flex items-center gap-3">
+          <i class="fa-solid fa-user-tie text-brand-primary dark:text-brand-accent" aria-hidden="true"></i>
           Jeremy Coach
         </h1>
       </div>
       <div class="flex flex-wrap gap-2">
         <a
           href="mailto:actslim@gmail.com"
-          class="inline-flex items-center gap-2 rounded-xl bg-white/5 px-4 py-2 text-sm font-medium text-white/90 ring-1 ring-white/10 backdrop-blur hover:bg-white/10"
+          class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-secondary/20 via-brand-primary/20 to-brand-accent/20 dark:from-brand-secondary/15 dark:via-brand-primary/15 dark:to-brand-accent/15 px-5 py-2.5 text-base font-medium text-brand-dark dark:text-white/90 ring-2 ring-brand-primary/30 dark:ring-brand-accent/30 backdrop-blur hover:from-brand-secondary/30 hover:via-brand-primary/30 hover:to-brand-accent/30 dark:hover:from-brand-secondary/20 dark:hover:via-brand-primary/20 dark:hover:to-brand-accent/20 transition-all shadow-md"
         >
-          <i class="fa-solid fa-envelope text-white/70" aria-hidden="true"></i>
+          <i class="fa-solid fa-envelope text-brand-primary dark:text-brand-secondary" aria-hidden="true"></i>
           Email
         </a>
       </div>
@@ -83,90 +119,95 @@
     <div class="grid gap-6 lg:grid-cols-12">
       <!-- LEFT: Identity card -->
       <section class="lg:col-span-5">
-        <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-card backdrop-blur-xl">
-          <div class="absolute inset-0 bg-gradient-to-br from-brand-blue/12 via-brand-purple/10 to-transparent"></div>
+        <div class="relative overflow-hidden rounded-3xl border-2 border-brand-primary/20 dark:border-brand-primary/30 bg-white/95 dark:bg-brand-dark/20 shadow-card-light dark:shadow-card backdrop-blur-xl">
+          <div class="absolute inset-0 bg-gradient-to-br from-brand-secondary/8 via-brand-primary/6 to-brand-accent/8 dark:from-brand-secondary/12 dark:via-brand-primary/10 dark:to-brand-accent/12"></div>
+          <div class="absolute top-0 right-0 w-64 h-64 bg-brand-secondary/10 dark:bg-brand-secondary/15 rounded-full blur-3xl"></div>
+          <div class="absolute bottom-0 left-0 w-48 h-48 bg-brand-accent/10 dark:bg-brand-accent/15 rounded-full blur-3xl"></div>
           <div class="relative p-6 md:p-8">
             <!-- Logo -->
             <div class="flex items-center justify-center">
-              <div class="rounded-2xl bg-gradient-to-br from-brand-cyan/40 via-brand-blue/30 to-brand-purple/35 p-[1px]">
-                <div class="rounded-2xl bg-ink-850/70 px-5 py-5">
-                  <img src="flowlab_logo.png" alt="FLOW LAB Logo" class="h-28 w-auto object-contain md:h-32 lg:h-36" />
-                </div>
-              </div>
+              <img src="fl_logo4.png" alt="FLOW LAB Logo" class="h-32 w-auto object-contain md:h-40 lg:h-44 mx-auto" />
             </div>
 
             <!-- Badge -->
             <div class="mt-6 flex justify-center">
               <span
-                class="inline-flex items-center gap-2 rounded-full bg-white/5 px-4 py-2 text-xs font-semibold tracking-[0.22em] text-white/80 ring-1 ring-white/10"
+                class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand-secondary/20 via-brand-primary/20 to-brand-accent/20 dark:from-brand-secondary/15 dark:via-brand-primary/15 dark:to-brand-accent/15 px-5 py-2.5 text-sm font-bold tracking-[0.22em] text-brand-dark dark:text-white/90 ring-2 ring-brand-primary/30 dark:ring-brand-accent/30 shadow-lg"
               >
-                <span class="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-brand-cyan to-brand-purple"></span>
+                <span class="h-2 w-2 rounded-full bg-gradient-to-r from-brand-secondary via-brand-primary to-brand-accent animate-pulse"></span>
                 GROWTH COACH
               </span>
             </div>
 
             <!-- Concept Quote -->
-            <div class="mt-6 text-center">
-              <p class="text-sm font-medium text-white/70">"Flow Makes You Grow"</p>
-              <div class="mt-4 space-y-2 text-sm text-white/60 leading-relaxed">
-                <p>Every thought matters</p>
-                <p>when it's allowed to flow.</p>
-                <p class="mt-3 text-white/50">We capture it.</p>
-                <p class="text-white/50">Let it breathe.</p>
-                <p class="text-white/50">Shape it into meaning.</p>
-                <p class="mt-3 text-white/70">At Flow-Lab,</p>
-                <p class="text-white/70">thoughts become content,</p>
-                <p class="text-white/70">and content becomes growth.</p>
+            <div class="mt-8 rounded-2xl bg-gradient-to-br from-brand-secondary/12 via-brand-primary/10 to-brand-accent/12 dark:from-brand-secondary/18 dark:via-brand-primary/15 dark:to-brand-accent/18 p-6 ring-2 ring-brand-primary/30 dark:ring-brand-accent/30 shadow-lg border border-brand-primary/20 dark:border-brand-accent/20">
+              <p class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-brand-secondary via-brand-primary to-brand-accent bg-clip-text text-transparent mb-6 text-center">
+                "Flow Makes You Grow"
+              </p>
+              <div class="mt-6 space-y-3 text-base md:text-lg text-gray-800 dark:text-white/90 leading-relaxed font-medium text-center">
+                <p class="text-lg md:text-xl font-semibold text-gray-900 dark:text-white">
+                  Every thought matters
+                </p>
+                <p class="text-lg md:text-xl font-semibold text-gray-900 dark:text-white">
+                  when it's allowed to flow.
+                </p>
+                <div class="mt-4 pt-4 border-t border-brand-primary/20 dark:border-brand-secondary/30">
+                  <p class="text-brand-gray dark:text-white/80">We capture it.</p>
+                  <p class="text-brand-gray dark:text-white/80">Let it breathe.</p>
+                  <p class="text-brand-gray dark:text-white/80">Shape it into meaning.</p>
+                </div>
+                <div class="mt-4 pt-4 border-t border-brand-primary/20 dark:border-brand-accent/30">
+                  <p class="text-brand-dark dark:text-white/90 font-semibold">At Flow-Lab,</p>
+                  <p class="text-brand-dark dark:text-white/90 font-semibold">thoughts become content,</p>
+                  <p class="text-brand-dark dark:text-white/90 font-semibold">and content becomes growth.</p>
+                </div>
               </div>
             </div>
 
-            <div class="mt-8 grid gap-4">
+            <div class="mt-8 grid gap-5">
               <!-- Role -->
-              <div class="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
-                <div class="mb-2 flex items-center gap-2 text-xs font-semibold tracking-[0.22em] text-white/55">
+              <!-- Role -->
+              <div class="rounded-2xl bg-gradient-to-br from-brand-secondary/10 via-brand-primary/8 to-transparent dark:from-brand-secondary/15 dark:via-brand-primary/12 p-5 ring-2 ring-brand-primary/25 dark:ring-brand-primary/35 shadow-md border border-brand-primary/20">
+                <div class="mb-3 flex items-center gap-2 text-sm font-bold tracking-[0.22em] text-brand-primary dark:text-brand-secondary">
                   <i class="fa-solid fa-id-badge" aria-hidden="true"></i>
                   ROLE
                 </div>
-                <ul class="space-y-2 text-sm text-white/90">
-                  <li class="flex items-center gap-2">
-                    <i class="fa-solid fa-seedling text-white/60" aria-hidden="true"></i>
-                    성장 설계 스튜디오 · FLOW LAB
+                <ul class="space-y-2.5 text-base text-brand-dark dark:text-white font-medium">
+                  <li class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-seedling text-brand-secondary dark:text-brand-secondary" aria-hidden="true"></i>
+                    성장 설계 스튜디오
                   </li>
-                  <li class="flex items-center gap-2">
-                    <i class="fa-solid fa-user-graduate text-white/60" aria-hidden="true"></i>
+                  <li class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-user-graduate text-brand-primary dark:text-brand-accent" aria-hidden="true"></i>
                     미래성장코칭 전문가
                   </li>
                 </ul>
               </div>
 
               <!-- Contact -->
-              <div class="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
-                <div class="mb-2 flex items-center gap-2 text-xs font-semibold tracking-[0.22em] text-white/55">
+              <div class="rounded-2xl bg-gradient-to-br from-brand-primary/10 via-brand-accent/8 to-transparent dark:from-brand-primary/15 dark:via-brand-accent/12 p-5 ring-2 ring-brand-primary/25 dark:ring-brand-accent/35 shadow-md border border-brand-primary/20">
+                <div class="mb-3 flex items-center gap-2 text-sm font-bold tracking-[0.22em] text-brand-primary dark:text-brand-secondary">
                   <i class="fa-solid fa-address-book" aria-hidden="true"></i>
                   CONTACT
                 </div>
-                <ul class="space-y-2 text-sm text-white/90">
-                  <li class="flex items-center gap-2">
-                    <i class="fa-solid fa-envelope text-white/60" aria-hidden="true"></i>
+                <ul class="space-y-2.5 text-base text-brand-dark dark:text-white font-medium">
+                  <li class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-envelope text-brand-primary dark:text-brand-secondary" aria-hidden="true"></i>
                     <span class="break-all">actslim@gmail.com</span>
                   </li>
                 </ul>
               </div>
 
               <!-- Office -->
-              <div class="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
-                <div class="mb-2 flex items-center gap-2 text-xs font-semibold tracking-[0.22em] text-white/55">
+              <div class="rounded-2xl bg-gradient-to-br from-brand-secondary/10 via-brand-primary/8 to-brand-accent/8 dark:from-brand-secondary/15 dark:via-brand-primary/12 dark:to-brand-accent/12 p-5 ring-2 ring-brand-primary/25 dark:ring-brand-primary/35 shadow-md border border-brand-primary/20">
+                <div class="mb-3 flex items-center gap-2 text-sm font-bold tracking-[0.22em] text-brand-primary dark:text-brand-accent">
                   <i class="fa-solid fa-building" aria-hidden="true"></i>
                   OFFICE
                 </div>
-                <ul class="space-y-2 text-sm text-white/90">
-                  <li class="flex items-start gap-2">
-                    <i class="fa-solid fa-location-dot mt-0.5 text-white/60" aria-hidden="true"></i>
+                <ul class="space-y-2.5 text-base text-brand-dark dark:text-white font-medium">
+                  <li class="flex items-start gap-2.5">
+                    <i class="fa-solid fa-location-dot mt-1 text-brand-primary dark:text-brand-secondary" aria-hidden="true"></i>
                     <span>남양주시 다산중앙로 20<br>다산현대프리미어캠퍼스 A동 B1층 8호</span>
-                  </li>
-                  <li class="flex items-center gap-2">
-                    <i class="fa-solid fa-landmark text-white/60" aria-hidden="true"></i>
-                    FLOW LAB
                   </li>
                 </ul>
               </div>
@@ -177,146 +218,202 @@
 
       <!-- RIGHT: Programs & Philosophy -->
       <section class="lg:col-span-7">
-        <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-card backdrop-blur-xl">
-          <div class="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-brand-purple/10"></div>
+        <div class="relative overflow-hidden rounded-3xl border-2 border-brand-primary/20 dark:border-brand-primary/30 bg-white/95 dark:bg-brand-dark/20 shadow-card-light dark:shadow-card backdrop-blur-xl">
+          <div class="absolute inset-0 bg-gradient-to-br from-brand-secondary/6 via-brand-primary/5 to-brand-accent/6 dark:from-brand-secondary/10 dark:via-brand-primary/8 dark:to-brand-accent/10"></div>
+          <div class="absolute top-0 right-0 w-64 h-64 bg-brand-secondary/8 dark:bg-brand-secondary/12 rounded-full blur-3xl"></div>
+          <div class="absolute bottom-0 left-0 w-48 h-48 bg-brand-accent/8 dark:bg-brand-accent/12 rounded-full blur-3xl"></div>
           <div class="relative p-6 md:p-8">
-            <div class="flex items-center justify-between gap-4">
-              <div>
-                <p class="text-xs font-semibold tracking-[0.28em] text-white/55">
-                  <i class="fa-solid fa-lightbulb mr-2" aria-hidden="true"></i>
+            <div>
+                <p class="text-sm font-bold tracking-[0.28em] text-brand-gray dark:text-white/70">
+                  <i class="fa-solid fa-lightbulb mr-2 text-brand-secondary dark:text-brand-secondary" aria-hidden="true"></i>
                   GROWTH PROGRAMS
                 </p>
-                <h2 class="mt-2 text-xl font-semibold tracking-tight md:text-2xl">성장 프로그램</h2>
-              </div>
-              <div class="hidden md:block rounded-full bg-white/5 px-3 py-1 text-xs text-white/60 ring-1 ring-white/10">
-                Flow Makes You Grow
-              </div>
+              <h2 class="mt-2 text-2xl font-bold tracking-tight text-brand-dark dark:text-white md:text-3xl">성장 프로그램</h2>
             </div>
 
             <!-- Philosophy -->
-            <div class="mt-6 rounded-2xl bg-gradient-to-br from-brand-blue/10 via-brand-purple/8 to-transparent p-5 ring-1 ring-white/10">
-              <p class="text-sm leading-relaxed text-white/80">
-                플로우랩은 개인과 조직이 자신의 생각, 경험, 강점을 하나의 <span class="font-semibold text-white">'성장 시스템'</span>으로 설계하도록 돕는 성장 설계 스튜디오입니다.
-              </p>
-              <p class="mt-3 text-sm leading-relaxed text-white/70">
-                <span class="font-medium text-white/90">성장은 의지가 아니라 구조의 문제입니다.</span><br>
-                올바른 흐름을 만들면 누구나 성장할 수 있습니다.
-              </p>
+            <div class="mt-6 rounded-2xl bg-gradient-to-br from-brand-secondary/12 via-brand-primary/10 to-brand-accent/12 dark:from-brand-secondary/18 dark:via-brand-primary/15 dark:to-brand-accent/18 p-6 ring-2 ring-brand-primary/30 dark:ring-brand-accent/30 shadow-lg border border-brand-primary/20 dark:border-brand-accent/20">
+              <div class="flex items-start gap-3">
+                <i class="fa-solid fa-quote-left text-2xl text-brand-primary dark:text-brand-secondary mt-1" aria-hidden="true"></i>
+                <div class="flex-1">
+                  <p class="text-base leading-relaxed text-brand-dark dark:text-white/90 font-medium">
+                    플로우랩은 개인과 조직이 자신의 생각, 경험, 강점을 하나의 <span class="font-bold bg-gradient-to-r from-brand-secondary via-brand-primary to-brand-accent bg-clip-text text-transparent">'성장 시스템'</span>으로 설계하도록 돕는 성장 설계 스튜디오입니다.
+                  </p>
+                  <p class="mt-4 text-base leading-relaxed text-brand-gray dark:text-white/80">
+                    <span class="font-bold text-brand-primary dark:text-brand-secondary text-lg flex items-center gap-2">
+                      <i class="fa-solid fa-gear text-brand-primary dark:text-brand-accent" aria-hidden="true"></i>
+                      성장은 의지가 아니라 구조의 문제입니다.
+                    </span><br>
+                    <span class="text-base flex items-center gap-2 mt-2 text-brand-dark dark:text-white/90">
+                      <i class="fa-solid fa-arrow-right text-brand-primary dark:text-brand-accent" aria-hidden="true"></i>
+                      올바른 흐름을 만들면 누구나 성장할 수 있습니다.
+                    </span>
+                  </p>
+                </div>
+              </div>
             </div>
 
             <!-- Programs Timeline -->
             <div class="mt-8 relative">
-              <div class="absolute left-4 top-0 bottom-0 w-px bg-gradient-to-b from-brand-cyan/40 via-white/10 to-brand-purple/30"></div>
+              <div class="absolute left-4 top-0 bottom-0 w-px bg-brand-primary/30 dark:bg-brand-secondary/40"></div>
 
               <div class="space-y-4">
                 <!-- Program 1: Direction -->
-                <div class="relative pl-12">
-                  <div class="absolute left-1 top-3 h-6 w-6 rounded-full bg-gradient-to-r from-brand-cyan via-brand-blue to-brand-purple p-[1px]">
-                    <div class="flex h-full w-full items-center justify-center rounded-full bg-ink-850/80">
-                      <i class="fa-solid fa-compass text-[11px] text-white/80" aria-hidden="true"></i>
+                <div class="relative pl-12 program-item">
+                  <div class="absolute left-1 top-3 h-6 w-6 rounded-full border-2 border-brand-secondary dark:border-brand-accent bg-brand-primary/20 dark:bg-brand-secondary/20">
+                    <div class="flex h-full w-full items-center justify-center rounded-full">
+                      <i class="fa-solid fa-compass text-[11px] text-brand-secondary dark:text-brand-primary" aria-hidden="true"></i>
                     </div>
                   </div>
-                  <div class="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 hover:bg-white/10 transition-colors">
-                    <p class="text-xs font-semibold text-white/55">디렉션 (Direction)</p>
-                    <p class="mt-1 text-base font-semibold">자기 이해 기반 방향 설계</p>
-                    <p class="mt-1 text-sm text-white/70">기질, 사고 방식, 강점, 가치관을 통합해 '나는 어떤 방향으로 살아야 하는가'에 대한 개인만의 기준을 세우고, 매년 자신의 방향을 업데이트하도록 돕습니다.</p>
+                  <div class="rounded-2xl bg-gradient-to-br from-brand-secondary/10 via-brand-primary/8 to-transparent dark:from-brand-secondary/15 dark:via-brand-primary/12 ring-2 ring-brand-primary/25 dark:ring-brand-primary/35 shadow-md overflow-hidden border border-brand-primary/20">
+                    <button class="program-header w-full text-left p-5 hover:bg-brand-primary/12 dark:hover:bg-brand-primary/20 transition-all flex items-center justify-between cursor-pointer">
+                      <div>
+                        <p class="text-sm font-bold text-brand-primary dark:text-brand-secondary">디렉션 (Direction)</p>
+                        <p class="mt-1 text-lg font-bold text-brand-dark dark:text-white">자기 이해 기반 방향 설계</p>
+                      </div>
+                      <i class="fa-solid fa-chevron-down text-brand-secondary dark:text-brand-accent transition-transform duration-300 program-icon ml-4" aria-hidden="true"></i>
+                    </button>
+                    <div class="program-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                      <div class="px-5 pb-5">
+                        <p class="text-base text-brand-gray dark:text-white/80 leading-relaxed">기질, 사고 방식, 강점, 가치관을 통합해 '나는 어떤 방향으로 살아야 하는가'에 대한 개인만의 기준을 세우고, 매년 자신의 방향을 업데이트하도록 돕습니다.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <!-- Program 2: Level-Up Notion -->
-                <div class="relative pl-12">
-                  <div class="absolute left-1 top-3 h-6 w-6 rounded-full bg-gradient-to-r from-brand-cyan via-brand-blue to-brand-purple p-[1px]">
-                    <div class="flex h-full w-full items-center justify-center rounded-full bg-ink-850/80">
-                      <i class="fa-solid fa-database text-[11px] text-white/80" aria-hidden="true"></i>
+                <div class="relative pl-12 program-item">
+                  <div class="absolute left-1 top-3 h-6 w-6 rounded-full border-2 border-brand-accent dark:border-brand-secondary bg-brand-primary/20 dark:bg-brand-accent/20">
+                    <div class="flex h-full w-full items-center justify-center rounded-full">
+                      <i class="fa-solid fa-database text-[11px] text-brand-accent dark:text-brand-primary" aria-hidden="true"></i>
                     </div>
                   </div>
-                  <div class="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 hover:bg-white/10 transition-colors">
-                    <p class="text-xs font-semibold text-white/55">레벨업 노션 (Level-Up Notion)</p>
-                    <p class="mt-1 text-base font-semibold">노션 기반 운영 시스템 구축</p>
-                    <p class="mt-1 text-sm text-white/70">노션을 활용해 개인의 일과 학습, 프로젝트, 기록을 하나의 운영 시스템으로 구축하는 실전 과정입니다. 자신만의 생산성과 성장 구조를 만드는 데 초점을 둡니다.</p>
+                  <div class="rounded-2xl bg-gradient-to-br from-brand-primary/10 via-brand-accent/8 to-transparent dark:from-brand-primary/15 dark:via-brand-accent/12 ring-2 ring-brand-primary/25 dark:ring-brand-accent/35 shadow-md overflow-hidden border border-brand-primary/20">
+                    <button class="program-header w-full text-left p-5 hover:bg-brand-accent/12 dark:hover:bg-brand-accent/20 transition-all flex items-center justify-between cursor-pointer">
+                      <div>
+                        <p class="text-sm font-bold text-brand-primary dark:text-brand-secondary">레벨업 노션 (Level-Up Notion)</p>
+                        <p class="mt-1 text-lg font-bold text-brand-dark dark:text-white">노션 기반 운영 시스템 구축</p>
+                      </div>
+                      <i class="fa-solid fa-chevron-down text-brand-primary dark:text-brand-secondary transition-transform duration-300 program-icon ml-4" aria-hidden="true"></i>
+                    </button>
+                    <div class="program-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                      <div class="px-5 pb-5">
+                        <p class="text-base text-brand-gray dark:text-white/80 leading-relaxed">노션을 활용해 개인의 일과 학습, 프로젝트, 기록을 하나의 운영 시스템으로 구축하는 실전 과정입니다. 자신만의 생산성과 성장 구조를 만드는 데 초점을 둡니다.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <!-- Program 3: Level-Up AI -->
-                <div class="relative pl-12">
-                  <div class="absolute left-1 top-3 h-6 w-6 rounded-full bg-gradient-to-r from-brand-cyan via-brand-blue to-brand-purple p-[1px]">
-                    <div class="flex h-full w-full items-center justify-center rounded-full bg-ink-850/80">
-                      <i class="fa-solid fa-brain text-[11px] text-white/80" aria-hidden="true"></i>
+                <div class="relative pl-12 program-item">
+                  <div class="absolute left-1 top-3 h-6 w-6 rounded-full border-2 border-brand-secondary dark:border-brand-secondary bg-brand-primary/20 dark:bg-brand-secondary/20">
+                    <div class="flex h-full w-full items-center justify-center rounded-full">
+                      <i class="fa-solid fa-brain text-[11px] text-brand-secondary dark:text-brand-primary" aria-hidden="true"></i>
                     </div>
                   </div>
-                  <div class="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 hover:bg-white/10 transition-colors">
-                    <p class="text-xs font-semibold text-white/55">레벨업 AI (Level-Up AI)</p>
-                    <p class="mt-1 text-base font-semibold">AI 도구를 활용한 지식 자산화</p>
-                    <p class="mt-1 text-sm text-white/70">AI 도구를 활용해 지식과 콘텐츠를 자산으로 전환하는 프로그램입니다. 개인 브랜드, 웹자산, 콘텐츠 제작까지 연결하여 아이디어를 실제 결과물로 구현할 수 있도록 돕습니다.</p>
+                  <div class="rounded-2xl bg-gradient-to-br from-brand-secondary/10 via-brand-primary/8 to-brand-accent/8 dark:from-brand-secondary/15 dark:via-brand-primary/12 dark:to-brand-accent/12 ring-2 ring-brand-primary/25 dark:ring-brand-primary/35 shadow-md overflow-hidden border border-brand-primary/20">
+                    <button class="program-header w-full text-left p-5 hover:bg-brand-primary/12 dark:hover:bg-brand-primary/20 transition-all flex items-center justify-between cursor-pointer">
+                      <div>
+                        <p class="text-sm font-bold text-brand-primary dark:text-brand-accent">레벨업 AI (Level-Up AI)</p>
+                        <p class="mt-1 text-lg font-bold text-brand-dark dark:text-white">AI 도구를 활용한 지식 자산화</p>
+                      </div>
+                      <i class="fa-solid fa-chevron-down text-brand-accent dark:text-brand-primary transition-transform duration-300 program-icon ml-4" aria-hidden="true"></i>
+                    </button>
+                    <div class="program-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                      <div class="px-5 pb-5">
+                        <p class="text-base text-brand-gray dark:text-white/80 leading-relaxed">AI 도구를 활용해 지식과 콘텐츠를 자산으로 전환하는 프로그램입니다. 개인 브랜드, 웹자산, 콘텐츠 제작까지 연결하여 아이디어를 실제 결과물로 구현할 수 있도록 돕습니다.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
                 <!-- Program 4: Book Insight -->
-                <div class="relative pl-12">
-                  <div class="absolute left-1 top-3 h-6 w-6 rounded-full bg-gradient-to-r from-brand-cyan via-brand-blue to-brand-purple p-[1px]">
-                    <div class="flex h-full w-full items-center justify-center rounded-full bg-ink-850/80">
-                      <i class="fa-solid fa-book-open text-[11px] text-white/80" aria-hidden="true"></i>
+                <div class="relative pl-12 program-item">
+                  <div class="absolute left-1 top-3 h-6 w-6 rounded-full border-2 border-brand-accent dark:border-brand-secondary bg-brand-primary/20 dark:bg-brand-accent/20">
+                    <div class="flex h-full w-full items-center justify-center rounded-full">
+                      <i class="fa-solid fa-book-open text-[11px] text-brand-accent dark:text-brand-primary" aria-hidden="true"></i>
                     </div>
                   </div>
-                  <div class="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 hover:bg-white/10 transition-colors">
-                    <p class="text-xs font-semibold text-white/55">북인사이트 (Book Insight)</p>
-                    <p class="mt-1 text-base font-semibold">기억과 사고, 실행으로 연결하는 독서 프로그램</p>
-                    <p class="mt-2 text-sm text-white/70">책을 지식으로 소비하는 데서 멈추지 않고, 기억과 사고, 실행으로 연결하는 독서 기반 성장 프로그램입니다.</p>
-                    
-                    <div class="mt-3 space-y-2.5 border-t border-white/10 pt-3">
-                      <p class="text-xs font-semibold text-white/60 mb-2">3H 구조 중심 설계</p>
-                      
-                      <div class="space-y-2">
-                        <div>
-                          <p class="text-xs font-semibold text-brand-cyan/90 flex items-center gap-1.5">
-                            <i class="fa-solid fa-circle text-[6px]" aria-hidden="true"></i>
-                            Head
-                          </p>
-                          <p class="mt-0.5 text-xs text-white/60 ml-3">책의 핵심 개념과 구조를 이해하는 단계. 저자의 논리와 메시지를 자신의 언어로 재구성합니다.</p>
+                  <div class="rounded-2xl bg-gradient-to-br from-brand-primary/10 via-brand-accent/8 to-transparent dark:from-brand-primary/15 dark:via-brand-accent/12 ring-2 ring-brand-primary/25 dark:ring-brand-accent/35 shadow-md overflow-hidden border border-brand-primary/20">
+                    <button class="program-header w-full text-left p-5 hover:bg-brand-accent/12 dark:hover:bg-brand-accent/20 transition-all flex items-center justify-between cursor-pointer">
+                      <div>
+                        <p class="text-sm font-bold text-brand-primary dark:text-brand-secondary">북인사이트 (Book Insight)</p>
+                        <p class="mt-1 text-lg font-bold text-brand-dark dark:text-white">기억과 사고, 실행으로 연결하는 독서 프로그램</p>
+                      </div>
+                      <i class="fa-solid fa-chevron-down text-brand-primary dark:text-brand-secondary transition-transform duration-300 program-icon ml-4" aria-hidden="true"></i>
+                    </button>
+                    <div class="program-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                      <div class="px-5 pb-5">
+                        <p class="text-base text-brand-gray dark:text-white/80 leading-relaxed">책을 지식으로 소비하는 데서 멈추지 않고, 기억과 사고, 실행으로 연결하는 독서 기반 성장 프로그램입니다.</p>
+                        
+                        <div class="mt-4 space-y-3 border-t border-brand-primary/20 dark:border-white/10 pt-4">
+                          <p class="text-sm font-bold text-brand-dark dark:text-white/80 mb-3">3H 구조 중심 설계</p>
+                          
+                          <div class="space-y-3">
+                            <div>
+                              <p class="text-sm font-bold text-brand-primary dark:text-brand-secondary flex items-center gap-2">
+                                <i class="fa-solid fa-circle text-[8px]" aria-hidden="true"></i>
+                                Head
+                              </p>
+                              <p class="mt-1 text-sm text-brand-gray dark:text-white/70 ml-5 leading-relaxed">책의 핵심 개념과 구조를 이해하는 단계. 저자의 논리와 메시지를 자신의 언어로 재구성합니다.</p>
+                            </div>
+                            
+                            <div>
+                              <p class="text-sm font-bold text-brand-accent dark:text-brand-secondary flex items-center gap-2">
+                                <i class="fa-solid fa-circle text-[8px]" aria-hidden="true"></i>
+                                Heart
+                              </p>
+                              <p class="mt-1 text-sm text-brand-gray dark:text-white/70 ml-5 leading-relaxed">책을 통해 무엇을 느꼈는지, 어떤 장면과 문장이 자신에게 반응을 일으켰는지를 탐색하는 단계. 가치관과 신념의 변화를 인식합니다.</p>
+                            </div>
+                            
+                            <div>
+                              <p class="text-sm font-bold text-brand-primary dark:text-brand-accent flex items-center gap-2">
+                                <i class="fa-solid fa-circle text-[8px]" aria-hidden="true"></i>
+                                Hand
+                              </p>
+                              <p class="mt-1 text-sm text-brand-gray dark:text-white/70 ml-5 leading-relaxed">이해와 감정을 실제 행동으로 연결하는 단계. 책에서 얻은 통찰을 삶, 일, 관계, 프로젝트에 적용 가능한 실행으로 전환합니다.</p>
+                            </div>
+                          </div>
                         </div>
                         
-                        <div>
-                          <p class="text-xs font-semibold text-brand-purple/90 flex items-center gap-1.5">
-                            <i class="fa-solid fa-circle text-[6px]" aria-hidden="true"></i>
-                            Heart
-                          </p>
-                          <p class="mt-0.5 text-xs text-white/60 ml-3">책을 통해 무엇을 느꼈는지, 어떤 장면과 문장이 자신에게 반응을 일으켰는지를 탐색하는 단계. 가치관과 신념의 변화를 인식합니다.</p>
-                        </div>
-                        
-                        <div>
-                          <p class="text-xs font-semibold text-brand-blue/90 flex items-center gap-1.5">
-                            <i class="fa-solid fa-circle text-[6px]" aria-hidden="true"></i>
-                            Hand
-                          </p>
-                          <p class="mt-0.5 text-xs text-white/60 ml-3">이해와 감정을 실제 행동으로 연결하는 단계. 책에서 얻은 통찰을 삶, 일, 관계, 프로젝트에 적용 가능한 실행으로 전환합니다.</p>
-                        </div>
+                        <p class="mt-4 text-sm text-brand-gray dark:text-white/70 italic font-medium">"많이 읽는 독서"가 아니라 "남는 독서"를 목표로 합니다.</p>
                       </div>
                     </div>
-                    
-                    <p class="mt-3 text-xs text-white/50 italic">"많이 읽는 독서"가 아니라 "남는 독서"를 목표로 합니다.</p>
                   </div>
                 </div>
 
                 <!-- Program 5: 1:1 Coaching -->
-                <div class="relative pl-12">
-                  <div class="absolute left-1 top-3 h-6 w-6 rounded-full bg-gradient-to-r from-brand-cyan via-brand-blue to-brand-purple p-[1px]">
-                    <div class="flex h-full w-full items-center justify-center rounded-full bg-ink-850/80">
-                      <i class="fa-solid fa-handshake text-[11px] text-white/80" aria-hidden="true"></i>
+                <div class="relative pl-12 program-item">
+                  <div class="absolute left-1 top-3 h-6 w-6 rounded-full border-2 border-brand-secondary dark:border-brand-secondary bg-brand-primary/20 dark:bg-brand-secondary/20">
+                    <div class="flex h-full w-full items-center justify-center rounded-full">
+                      <i class="fa-solid fa-handshake text-[11px] text-brand-secondary dark:text-brand-primary" aria-hidden="true"></i>
                     </div>
                   </div>
-                  <div class="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 hover:bg-white/10 transition-colors">
-                    <p class="text-xs font-semibold text-white/55">1:1 성장코칭</p>
-                    <p class="mt-1 text-base font-semibold">맞춤형 밀착 코칭</p>
-                    <p class="mt-1 text-sm text-white/70">개인의 상황과 목표에 맞춰 방향 설계부터 실행, 점검까지 밀착 지원하는 맞춤형 코칭입니다. 삶, 커리어, 비즈니스 전반을 아우르며 지속 가능한 성장을 함께 설계합니다.</p>
+                  <div class="rounded-2xl bg-gradient-to-br from-brand-secondary/10 via-brand-primary/8 to-brand-accent/8 dark:from-brand-secondary/15 dark:via-brand-primary/12 dark:to-brand-accent/12 ring-2 ring-brand-primary/25 dark:ring-brand-primary/35 shadow-md overflow-hidden border border-brand-primary/20">
+                    <button class="program-header w-full text-left p-5 hover:bg-brand-primary/12 dark:hover:bg-brand-primary/20 transition-all flex items-center justify-between cursor-pointer">
+                      <div>
+                        <p class="text-sm font-bold text-brand-primary dark:text-brand-accent">1:1 성장코칭</p>
+                        <p class="mt-1 text-lg font-bold text-brand-dark dark:text-white">맞춤형 밀착 코칭</p>
+                      </div>
+                      <i class="fa-solid fa-chevron-down text-brand-accent dark:text-brand-primary transition-transform duration-300 program-icon ml-4" aria-hidden="true"></i>
+                    </button>
+                    <div class="program-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                      <div class="px-5 pb-5">
+                        <p class="text-base text-brand-gray dark:text-white/80 leading-relaxed">개인의 상황과 목표에 맞춰 방향 설계부터 실행, 점검까지 밀착 지원하는 맞춤형 코칭입니다. 삶, 커리어, 비즈니스 전반을 아우르며 지속 가능한 성장을 함께 설계합니다.</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <footer class="mt-8 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-white/50 md:flex-row md:items-center md:justify-between">
-              <p>© <span id="year"></span> FLOW LAB · 성장 설계 스튜디오</p>
-              <p class="flex items-center gap-2">
-                <span class="inline-block h-1.5 w-1.5 rounded-full bg-gradient-to-r from-brand-cyan to-brand-purple"></span>
+            <footer class="mt-8 flex flex-col gap-2 border-t border-brand-primary/20 dark:border-white/10 pt-6 text-sm text-brand-gray dark:text-white/60 md:flex-row md:items-center md:justify-between">
+              <p class="font-medium flex items-center gap-2">
+                <i class="fa-solid fa-copyright text-brand-primary dark:text-brand-secondary" aria-hidden="true"></i>
+                <span id="year"></span> FLOW LAB
+              </p>
+              <p class="flex items-center gap-2 font-semibold text-brand-dark dark:text-white/80">
+                <span class="inline-block h-2 w-2 rounded-full bg-gradient-to-r from-brand-secondary via-brand-primary to-brand-accent"></span>
                 That's how we flow. That's how we grow.
               </p>
             </footer>
@@ -327,7 +424,65 @@
   </main>
 
   <script>
+    // Set year
     document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    const html = document.documentElement;
+
+    // Check for saved theme preference or default to dark mode
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    if (currentTheme === 'light') {
+      html.classList.remove('dark');
+    } else {
+      html.classList.add('dark');
+    }
+
+    // Update body background based on theme
+    function updateBodyBackground() {
+      if (html.classList.contains('dark')) {
+        document.body.className = 'dark bg-gradient-to-b from-ink-950 via-ink-900 to-ink-950 text-slate-100';
+      } else {
+        document.body.className = 'bg-gradient-to-b from-gray-50 via-white to-gray-50 text-gray-900';
+      }
+    }
+    updateBodyBackground();
+
+    // Toggle theme on button click
+    themeToggle.addEventListener('click', () => {
+      html.classList.toggle('dark');
+      const theme = html.classList.contains('dark') ? 'dark' : 'light';
+      localStorage.setItem('theme', theme);
+      updateBodyBackground();
+    });
+
+    // Accordion functionality for program items
+    document.querySelectorAll('.program-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const item = header.closest('.program-item');
+        const content = item.querySelector('.program-content');
+        const icon = item.querySelector('.program-icon');
+        const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+
+        // Close all other items
+        document.querySelectorAll('.program-content').forEach(otherContent => {
+          if (otherContent !== content) {
+            otherContent.style.maxHeight = '0px';
+            otherContent.closest('.program-item').querySelector('.program-icon').style.transform = 'rotate(0deg)';
+          }
+        });
+
+        // Toggle current item
+        if (isOpen) {
+          content.style.maxHeight = '0px';
+          icon.style.transform = 'rotate(0deg)';
+        } else {
+          content.style.maxHeight = content.scrollHeight + 'px';
+          icon.style.transform = 'rotate(180deg)';
+        }
+      });
+    });
   </script>
 </body>
 </html>
