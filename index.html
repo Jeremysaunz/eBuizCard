@@ -126,7 +126,30 @@
           <div class="relative p-6 md:p-8">
             <!-- Logo -->
             <div class="flex items-center justify-center">
-              <img src="fl_logo4.png" alt="FLOW LAB Logo" class="h-32 w-auto object-contain md:h-40 lg:h-44 mx-auto" />
+              <div class="relative group">
+                <!-- Outer glow effect -->
+                <div class="absolute -inset-1 rounded-3xl bg-gradient-to-br from-brand-secondary/40 via-brand-primary/30 to-brand-accent/40 dark:from-brand-secondary/25 dark:via-brand-primary/20 dark:to-brand-accent/25 blur-xl opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
+                
+                <!-- Gradient border wrapper -->
+                <div class="relative rounded-3xl p-[3px] bg-gradient-to-br from-brand-secondary via-brand-primary to-brand-accent">
+                  <!-- Inner frame -->
+                  <div class="relative rounded-3xl bg-gradient-to-br from-white/98 via-white/95 to-white/98 dark:from-ink-850/95 dark:via-ink-850/90 dark:to-ink-850/95 backdrop-blur-xl p-6 md:p-8 shadow-xl">
+                    <!-- Subtle inner gradient -->
+                    <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-brand-secondary/8 via-transparent to-brand-accent/8 dark:from-brand-secondary/12 dark:via-transparent dark:to-brand-accent/12"></div>
+                    
+                    <!-- Logo image -->
+                    <div class="relative z-10">
+                      <img src="fl_logo4.png" alt="FLOW LAB Logo" class="h-28 w-auto object-contain md:h-36 lg:h-40 mx-auto drop-shadow-md" />
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Decorative corner elements -->
+                <div class="absolute -top-1 -left-1 w-4 h-4 rounded-full bg-gradient-to-br from-brand-secondary to-brand-primary opacity-70 blur-sm"></div>
+                <div class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-br from-brand-primary to-brand-accent opacity-70 blur-sm"></div>
+                <div class="absolute -bottom-1 -left-1 w-4 h-4 rounded-full bg-gradient-to-br from-brand-accent to-brand-primary opacity-70 blur-sm"></div>
+                <div class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-br from-brand-secondary to-brand-accent opacity-70 blur-sm"></div>
+              </div>
             </div>
 
             <!-- Badge -->
